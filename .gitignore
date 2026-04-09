@@ -25,3 +25,6 @@ site/
 
 # private keys
 keys/*private*.pem
+
+!keys/
+!keys/new_public.pem
