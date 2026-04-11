@@ -1,0 +1,85 @@
+name: stage266-verified-public-evidence
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "stage266-pages"
+  cancel-in-progress: true
+
+jobs:
+  build-status-and-pages:
+    runs-on: ubuntu-latest
+
+    env:
+      REPO_OWNER: mokkunsuzuki-code
+      REPO_NAME: stage266
+      MANIFEST_PATH: out/release/release_manifest.json
+      OTS_PATH: out/release/release_manifest.json.ots
+      RECEIPT_PATH: out/release/github_actions_receipt.json
+      BUNDLE_PATH:
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install OpenTimestamps Python client
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install opentimestamps-client
+
+      - name: Ensure docs/status exists
+        run: mkdir -p docs/status
+
+      - name: OTS upgrade if proof exists
+        run: |
+          if [ -f "${OTS_PATH}" ]; then
+            ots upgrade "${OTS_PATH}" || true
+          fi
+
+      - name: Generate verification status JSON
+        run: node tools/generate_stage266_status.js
+
+      - name: Disable Jekyll
+        run: touch docs/.nojekyll
+
+      - name: Show generated status
+        run: cat docs/status/verification_status.json
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-status-and-pages
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

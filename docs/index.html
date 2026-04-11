@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stage266 Verified Public Evidence</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      max-width: 920px;
+      margin: 40px auto;
+      padding: 0 16px;
+      line-height: 1.6;
+      color: #111;
+      background: #fff;
+    }
+    h1, h2 { margin-bottom: 0.4em; }
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 16px 0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .status {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .confirmed { background: #e8f7e8; color: #176b17; }
+    .pending { background: #fff3cd; color: #8a6100; }
+    .warning { background: #fff0e6; color: #9a4d00; }
+    .error { background: #fdeaea; color: #a61b1b; }
+    code {
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+    ul { padding-left: 20px; }
+    a { word-break: break-all; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  </style>
+</head>
+<body>
+  <h1>Stage266: Verified Public Evidence</h1>
+  <p>Public verification page for manifest / receipt / OpenTimestamps proof status.</p>
+
+  <div id="app" class="card">Loading verification status...</div>
+
+  <script>
+    function esc(s) {
+      return String(s ?? "").replace(/[&<>"']/g, ch => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[ch]));
+    }
+
+    function linkRow(label, item) {
+      if (!item) return "";
+      return `
+        <li>
+          <strong>${esc(label)}</strong><br>
+          exists: <code>${esc(item.exists)}</code><br>
+          path: <code>${esc(item.path)}</code><br>
+          url: ${
+            item.url
+              ? `<a href="${esc(item.url)}" target="_blank" rel="noopener">${esc(item.url)}</a>`
+              : `<code>null</code>`
+          }
+        </li>
+      `;
+    }
+
+    fetch("./status/verification_status.json", { cache: "no-store" })
+      .then(r => {
+        if (!r.ok) throw new Error("Failed to fetch verification_status.json");
+        return r.json();
+      })
+      .then(data => {
+        const app = document.getElementById("app");
+        const statusClass =
+          data.final_status === "confirmed" ? "confirmed" :
+          data.final_status === "pending" ? "pending" :
+          data.final_status === "warning" ? "warning" : "error";
+
+        const ots = data.ots || {};
+        const artifacts = data.artifacts || {};
+        const notes = Array.isArray(ots.notes) ? ots.notes : [];
+        const pendingCalendars = Array.isArray(ots.pending_calendars) ? ots.pending_calendars : [];
+        const blockAttestations = Array.isArray(ots.bitcoin_block_attestations) ? ots.bitcoin_block_attestations : [];
+
+        app.innerHTML = `
+          <div class="status ${statusClass}">
+            ${esc(String(data.final_status).toUpperCase())}
+          </div>
+
+          <h2>Verification URL</h2>
+          <p><a href="${esc(data.verification_url)}" target="_blank" rel="noopener">${esc(data.verification_url)}</a></p>
+
+          <h2>OpenTimestamps status</h2>
+          <ul>
+            <li><strong>status</strong>: <code>${esc(ots.status)}</code></li>
+            <li><strong>verified</strong>: <code>${esc(ots.verified)}</code></li>
+            <li><strong>block height</strong>: <code>${esc(ots.block_height)}</code></li>
+            <li><strong>timestamp (unix)</strong>: <code>${esc(ots.timestamp_unix)}</code></li>
+            <li><strong>timestamp (iso)</strong>: <code>${esc(ots.timestamp_iso)}</code></li>
+          </ul>
+
+          <h2>Public artifacts</h2>
+          <ul>
+            ${linkRow("manifest", artifacts.manifest)}
+            ${linkRow("OTS proof", artifacts.ots_proof)}
+            ${linkRow("receipt", artifacts.receipt)}
+            ${artifacts.bundle && artifacts.bundle.path ? linkRow("bundle", artifacts.bundle) : ""}
+          </ul>
+
+          <h2>Pending calendars</h2>
+          ${
+            pendingCalendars.length
+              ? `<ul>${pendingCalendars.map(x => `<li><code>${esc(x)}</code></li>`).join("")}</ul>`
+              : `<p>None</p>`
+          }
+
+          <h2>Bitcoin block attestations found in proof</h2>
+          ${
+            blockAttestations.length
+              ? `<ul>${blockAttestations.map(x => `<li><code>${esc(x)}</code></li>`).join("")}</ul>`
+              : `<p>None</p>`
+          }
+
+          <h2>Notes</h2>
+          ${
+            notes.length
+              ? `<ul>${notes.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`
+              : `<p>None</p>`
+          }
+
+          <h2>Generated at</h2>
+          <p class="mono">${esc(data.generated_at)}</p>
+        `;
+      })
+      .catch(err => {
+        document.getElementById("app").innerHTML = `
+          <div class="status error">ERROR</div>
+          <p>${esc(err.message)}</p>
+        `;
+      });
+  </script>
+</body>
+</html>
