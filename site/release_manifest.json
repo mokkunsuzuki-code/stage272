@@ -1,0 +1,35 @@
+{
+  "artifacts": [
+    {
+      "description": "Deterministic source bundle derived from tracked repository files",
+      "path": "out/release/stage265-source-bundle.tar.gz",
+      "sha256": "a1921f59615f787792ad7c9f68531fc2b90dfe3f0f3eb956ea93ee14c18a602e"
+    }
+  ],
+  "generated_at_utc": "2026-04-10T13:40:01+00:00",
+  "github_actions_context": {
+    "actor": "",
+    "ref": "",
+    "repository": "",
+    "run_attempt": "",
+    "run_id": "",
+    "server_url": "",
+    "sha": "",
+    "workflow": ""
+  },
+  "notes": [
+    "The manifest binds the source bundle hash to a specific repository state.",
+    "OpenTimestamps stamps the manifest file itself.",
+    "GitHub Actions receipt provides execution-time evidence for independent review.",
+    "GitHub Pages publishes a public verification URL for browser-based checking."
+  ],
+  "repository": {
+    "branch": "main",
+    "commit": "2d48c13e44f8887e0d3b52bb81f180808113a5a9",
+    "remote": "https://github.com/mokkunsuzuki-code/stage265.git",
+    "short_commit": "2d48c13e44f8"
+  },
+  "stage": "stage265",
+  "title": "Public Verification URL with GitHub Pages and reproducible evidence bundle",
+  "version": 1
+}

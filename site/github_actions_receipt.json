@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "stage": "stage265",
+  "generated_at_utc": "2026-04-10T13:40:03.206027+00:00",
+  "github_actions": {
+    "workflow": "",
+    "run_id": "",
+    "run_attempt": "",
+    "sha": "",
+    "ref": "",
+    "actor": "",
+    "repository": "",
+    "server_url": "",
+    "run_url": "//actions/runs/"
+  },
+  "files": {
+    "release_manifest.json": {
+      "path": "out/release/release_manifest.json",
+      "sha256": "521679c0051339e1a9594de0352c3cfbd87eab7009f3a6ad3b560b27f8bf32db"
+    },
+    "release_manifest.json.ots": {
+      "path": "out/release/release_manifest.json.ots",
+      "sha256": "a90b545c5ceeb9300f3d99423331c5532f3755480eb6b8895aa2108e8d7921e1"
+    },
+    "release_manifest.json.sha256": {
+      "path": "out/release/release_manifest.json.sha256",
+      "sha256": "a183d347298c71a57206c1e91e32eda27e957f91a3bbc56efb565d09a9d38294"
+    }
+  },
+  "meaning": [
+    "This receipt proves that the manifest stamping pipeline ran in GitHub Actions.",
+    "The manifest hash, sha256 sidecar, and ots proof are bound to this workflow execution."
+  ]
+}

@@ -28,3 +28,7 @@ keys/*private*.pem
 
 !keys/
 !keys/new_public.pem
+
+# allow published site
+!site/
+!site/**
