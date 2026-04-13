@@ -1,0 +1,70 @@
+name: stage270-auto-settlement
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  auto-settlement:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install OpenTimestamps client
+        run: pip install opentimestamps-client
+
+      - name: Upgrade OTS and extract time settlement
+        run: python3 tools/upgrade_ots_and_extract_time.py
+
+      - name: Verify time settlement
+        run: python3 tools/verify_time_settlement.py
+
+      - name: Build verification score
+        run: python3 tools/build_verification_score.py
+
+      - name: Verify verification score
+        run: python3 tools/verify_verification_score.py
+
+      - name: Run VEP gate
+        run: python3 tools/verification_gate.py
+
+      - name: Verify gate result
+        run: python3 tools/verify_gate_result.py
+
+      - name: Write accept notification
+        run: python3 tools/write_accept_notification.py
+
+      - name: Verify accept notification
+        run: python3 tools/verify_accept_notification.py
+
+      - name: Emit workflow summary
+        run: python3 tools/emit_accept_summary.py
+
+      - name: Upload Stage270 artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage270-auto-settlement
+          path: |
+            out/time_settlement/time_settlement.json
+            out/time_settlement/time_settlement.md
+            out/verification_score/verification_score.json
+            out/verification_score/verification_score.json.sha256
+            out/verification_score/verification_score.md
+            out/vep_status/gate_result.json
+            out/vep_status/gate_result.json.sha256
+            out/vep_status/gate_result.md
+            out/notifications/accept_notification.json
+            out/notifications/accept_notification.md
