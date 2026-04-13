@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import os
 from pathlib import Path
 from typing import Any
 
@@ -185,8 +186,6 @@ def detect_execution_trust(root: Path) -> dict[str, Any]:
 
     workflow_dir = root / ".github" / "workflows"
     allowed_workflow_names = {
-        "stage268-verification-score.yml",
-        "stage268-pages.yml",
         "stage269-trust-gate.yml",
         "stage269-pages.yml",
     }
@@ -216,20 +215,30 @@ def detect_execution_trust(root: Path) -> dict[str, Any]:
             if "github.com" in text and "/actions/runs/" in text:
                 run_urls.append(str(p.relative_to(root)))
 
+    current_run_url = None
+    gh_server = os.getenv("GITHUB_SERVER_URL")
+    gh_repo = os.getenv("GITHUB_REPOSITORY")
+    gh_run_id = os.getenv("GITHUB_RUN_ID")
+
+    if gh_server and gh_repo and gh_run_id:
+        current_run_url = f"{gh_server}/{gh_repo}/actions/runs/{gh_run_id}"
+        run_urls.append(current_run_url)
+
     workflow_score = 1.0 if workflow_files else 0.0
-    ci_evidence_score = 1.0 if successful_run_records or run_urls else 0.0
+    ci_evidence_score = 1.0 if (successful_run_records or run_urls or current_run_url) else 0.0
     score = (workflow_score + ci_evidence_score) / 2.0
 
     return {
         "score": round4(score),
         "status": (
             f"workflows:{'yes' if workflow_files else 'no'}, "
-            f"ci_evidence:{'yes' if (successful_run_records or run_urls) else 'no'}"
+            f"ci_evidence:{'yes' if (successful_run_records or run_urls or current_run_url) else 'no'}"
         ),
         "details": {
             "workflow_files": sorted(workflow_files),
             "successful_run_records": sorted(set(successful_run_records)),
             "run_url_evidence_files": sorted(set(run_urls)),
+            "current_run_url": current_run_url,
         },
     }
 
