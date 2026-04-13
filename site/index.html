@@ -5,97 +5,289 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Stage268 Verification Score</title>
   <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121933;
+      --panel-2: #1a2347;
+      --text: #eef2ff;
+      --muted: #aab4d6;
+      --line: rgba(255,255,255,0.12);
+      --good: #39d98a;
+      --warn: #ffcc66;
+      --accent: #7aa2ff;
+    }
+    * { box-sizing: border-box; }
     body {
+      margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      max-width: 960px;
-      margin: 40px auto;
-      padding: 0 16px;
-      line-height: 1.6;
-      color: #111;
+      background: linear-gradient(180deg, #0b1020 0%, #101735 100%);
+      color: var(--text);
     }
-    h1, h2 { margin-bottom: 0.4em; }
-    .card {
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      padding: 16px;
-      margin: 16px 0;
-      background: #fafafa;
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 32px 20px 56px;
     }
-    .score {
-      font-size: 2rem;
+    .hero {
+      padding: 28px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
+      margin-bottom: 20px;
+    }
+    .eyebrow {
+      color: var(--accent);
+      font-size: 13px;
       font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
-    code, pre {
-      background: #f4f4f4;
-      border-radius: 8px;
+    h1 {
+      margin: 10px 0 12px;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.1;
+    }
+    .sub {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 800px;
+    }
+    .formula {
+      margin-top: 16px;
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(122,162,255,0.12);
+      color: #dbe5ff;
+      border: 1px solid rgba(122,162,255,0.25);
+      font-weight: 600;
+    }
+    .top-grid, .card-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .top-grid {
+      grid-template-columns: 1.2fr 1fr;
+      margin-bottom: 20px;
+    }
+    .card-grid {
+      grid-template-columns: repeat(4, 1fr);
+      margin-bottom: 20px;
+    }
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+      min-height: 140px;
+    }
+    .label {
+      color: var(--muted);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+    .big-score {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .score-note {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .component-score {
+      font-size: 34px;
+      font-weight: 800;
+      margin: 8px 0 6px;
+    }
+    .status {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 10px;
+      border: 1px solid transparent;
+    }
+    .good {
+      background: rgba(57,217,138,0.12);
+      color: var(--good);
+      border-color: rgba(57,217,138,0.25);
+    }
+    .warn {
+      background: rgba(255,204,102,0.12);
+      color: var(--warn);
+      border-color: rgba(255,204,102,0.25);
+    }
+    .panel {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: 22px;
     }
     pre {
+      margin: 0;
       padding: 16px;
+      border-radius: 14px;
+      background: #0a0f1f;
+      border: 1px solid var(--line);
       overflow-x: auto;
+      color: #dfe7ff;
+      line-height: 1.5;
+      font-size: 13px;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
+    a {
+      color: #9dc0ff;
+    }
+    @media (max-width: 900px) {
+      .top-grid, .card-grid {
+        grid-template-columns: 1fr;
+      }
+      .big-score {
+        font-size: 42px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Stage268 Verification Score</h1>
-  <p>
-    This page publishes the Stage268 trust evaluation result.
-  </p>
-  <p>
-    Total Trust = Time × Integrity × Execution × Identity
-  </p>
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow">QSP / Stage268</div>
+      <h1>Verification Score</h1>
+      <div class="sub">
+        This page publishes the Stage268 trust evaluation result as a reproducible score.
+        It does not claim absolute security. It shows how trust is measured from four evidence dimensions.
+      </div>
+      <div class="formula">Total Trust = Time × Integrity × Execution × Identity</div>
+    </section>
 
-  <div class="card">
-    <div>Total Trust</div>
-    <div id="total" class="score">loading...</div>
-  </div>
+    <section class="top-grid">
+      <div class="card">
+        <div class="label">Total Trust</div>
+        <div id="total" class="big-score">loading...</div>
+        <div id="summary" class="score-note">Loading evaluation summary...</div>
+      </div>
+      <div class="card">
+        <div class="label">Interpretation</div>
+        <div id="interpretation" class="score-note">
+          Loading...
+        </div>
+      </div>
+    </section>
 
-  <div class="grid">
-    <div class="card">
-      <h2>Time Trust</h2>
-      <div id="time">loading...</div>
-    </div>
-    <div class="card">
-      <h2>Integrity Trust</h2>
-      <div id="integrity">loading...</div>
-    </div>
-    <div class="card">
-      <h2>Execution Trust</h2>
-      <div id="execution">loading...</div>
-    </div>
-    <div class="card">
-      <h2>Identity Trust</h2>
-      <div id="identity">loading...</div>
-    </div>
-  </div>
+    <section class="card-grid">
+      <div class="card">
+        <div class="label">Time Trust</div>
+        <div id="timeScore" class="component-score">...</div>
+        <div id="timeStatus" class="status">loading...</div>
+        <div id="timeBadge" class="badge warn">loading...</div>
+      </div>
+      <div class="card">
+        <div class="label">Integrity Trust</div>
+        <div id="integrityScore" class="component-score">...</div>
+        <div id="integrityStatus" class="status">loading...</div>
+        <div id="integrityBadge" class="badge warn">loading...</div>
+      </div>
+      <div class="card">
+        <div class="label">Execution Trust</div>
+        <div id="executionScore" class="component-score">...</div>
+        <div id="executionStatus" class="status">loading...</div>
+        <div id="executionBadge" class="badge warn">loading...</div>
+      </div>
+      <div class="card">
+        <div class="label">Identity Trust</div>
+        <div id="identityScore" class="component-score">...</div>
+        <div id="identityStatus" class="status">loading...</div>
+        <div id="identityBadge" class="badge warn">loading...</div>
+      </div>
+    </section>
 
-  <div class="card">
-    <h2>Raw JSON</h2>
-    <pre id="raw">loading...</pre>
+    <section class="panel">
+      <h2>Raw JSON</h2>
+      <pre id="raw">loading...</pre>
+    </section>
+
+    <section class="panel">
+      <h2>Published Files</h2>
+      <p><a href="./verification_score.json">verification_score.json</a></p>
+      <p><a href="./verification_score.md">verification_score.md</a></p>
+    </section>
   </div>
 
   <script>
+    function setBadge(el, score) {
+      if (score >= 1.0) {
+        el.textContent = "Complete";
+        el.className = "badge good";
+      } else if (score >= 0.5) {
+        el.textContent = "Partial";
+        el.className = "badge warn";
+      } else {
+        el.textContent = "Weak";
+        el.className = "badge warn";
+      }
+    }
+
     fetch('./verification_score.json')
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error("Failed to load verification_score.json");
+        return r.json();
+      })
       .then(data => {
-        document.getElementById('total').textContent = data.total_trust;
-        document.getElementById('time').textContent =
-          `${data.components.time_trust.score} (${data.components.time_trust.status})`;
-        document.getElementById('integrity').textContent =
-          `${data.components.integrity_trust.score} (${data.components.integrity_trust.status})`;
-        document.getElementById('execution').textContent =
-          `${data.components.execution_trust.score} (${data.components.execution_trust.status})`;
-        document.getElementById('identity').textContent =
-          `${data.components.identity_trust.score} (${data.components.identity_trust.status})`;
-        document.getElementById('raw').textContent =
-          JSON.stringify(data, null, 2);
+        const c = data.components;
+
+        document.getElementById('total').textContent = data.total_trust.toFixed(2);
+        document.getElementById('summary').textContent =
+          `Current score based on detected evidence across four trust dimensions.`;
+
+        let interpretation = "Trust is measured, not assumed.";
+        if (data.total_trust >= 1.0) {
+          interpretation = "All four trust dimensions are fully satisfied by detected evidence.";
+        } else if (data.total_trust >= 0.5) {
+          interpretation = "Most trust dimensions are strong, but at least one component remains incomplete.";
+        } else {
+          interpretation = "The system has strong components, but one weak component is pulling the total score down.";
+        }
+        document.getElementById('interpretation').textContent = interpretation;
+
+        document.getElementById('timeScore').textContent = c.time_trust.score.toFixed(2);
+        document.getElementById('timeStatus').textContent = c.time_trust.status;
+        setBadge(document.getElementById('timeBadge'), c.time_trust.score);
+
+        document.getElementById('integrityScore').textContent = c.integrity_trust.score.toFixed(2);
+        document.getElementById('integrityStatus').textContent = c.integrity_trust.status;
+        setBadge(document.getElementById('integrityBadge'), c.integrity_trust.score);
+
+        document.getElementById('executionScore').textContent = c.execution_trust.score.toFixed(2);
+        document.getElementById('executionStatus').textContent = c.execution_trust.status;
+        setBadge(document.getElementById('executionBadge'), c.execution_trust.score);
+
+        document.getElementById('identityScore').textContent = c.identity_trust.score.toFixed(2);
+        document.getElementById('identityStatus').textContent = c.identity_trust.status;
+        setBadge(document.getElementById('identityBadge'), c.identity_trust.score);
+
+        document.getElementById('raw').textContent = JSON.stringify(data, null, 2);
       })
       .catch(err => {
-        document.getElementById('total').textContent = 'failed';
+        document.getElementById('total').textContent = "failed";
+        document.getElementById('summary').textContent = "Could not load score data.";
+        document.getElementById('interpretation').textContent = String(err);
         document.getElementById('raw').textContent = String(err);
       });
   </script>
