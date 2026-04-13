@@ -64,6 +64,7 @@
       "details": {
         "bitcoin_related_files": [
           "out/release/release_manifest.json",
+          "out/time_settlement/time_settlement.json",
           "out/vep_status/gate_result.json",
           "out/verification_score/verification_score.json",
           "package.json",

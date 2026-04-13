@@ -1,0 +1,10 @@
+{
+  "confirmations": 0,
+  "ots_path": "out/verification_score/verification_score.json.ots",
+  "settled": false,
+  "stage": "stage270",
+  "status": "bitcoin-proof-detected",
+  "timestamp_utc": "2026-04-13T09:20:54.300027+00:00",
+  "upgrade_stderr": "Calendar https://alice.btc.calendar.opentimestamps.org: Timestamped by transaction f0cbd452aac79d9e99fe3658e143a7339169b3e5df96dc3cb6c96dae8fdb27f1; waiting for 6 confirmations\nCalendar https://btc.calendar.catallaxy.com: Pending confirmation in Bitcoin blockchain\nCalendar https://finney.calendar.eternitywall.com: Pending confirmation in Bitcoin blockchain\nCalendar https://bob.btc.calendar.opentimestamps.org: Pending confirmation in Bitcoin blockchain\nFailed! Timestamp not complete\n",
+  "upgrade_stdout": ""
+}
