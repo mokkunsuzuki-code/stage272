@@ -128,3 +128,51 @@ Stage266:
 
 MIT License
 
+
+---
+
+# Stage268: Verification Score
+
+## Overview
+
+Stage268 introduces a deterministic trust scoring layer on top of the existing evidence system.
+
+This stage evaluates four dimensions:
+
+- Time Trust
+- Integrity Trust
+- Execution Trust
+- Identity Trust
+
+and combines them as:
+
+**Total Trust = Time × Integrity × Execution × Identity**
+
+## What This Stage Adds
+
+- A reproducible trust scoring model
+- Machine-generated verification score output
+- Local verification script for score consistency
+- GitHub Actions workflow that rebuilds and verifies the score
+
+## Output
+
+Generated files:
+
+- `out/verification_score/verification_score.json`
+- `out/verification_score/verification_score.json.sha256`
+- `out/verification_score/verification_score.md`
+
+## Why This Matters
+
+Earlier stages proved individual trust properties.
+
+Stage268 makes them visible as a unified evaluation model.
+
+This does **not** claim absolute security.
+
+It provides a reproducible evidence-based trust index.
+
+## MIT License
+
+This project is licensed under the MIT License.

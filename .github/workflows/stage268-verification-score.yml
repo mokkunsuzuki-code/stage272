@@ -1,0 +1,39 @@
+name: stage268-verification-score
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verification-score:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build verification score
+        run: |
+          python3 tools/build_verification_score.py
+
+      - name: Verify verification score
+        run: |
+          python3 tools/verify_verification_score.py
+
+      - name: Upload verification score artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage268-verification-score
+          path: |
+            out/verification_score/verification_score.json
+            out/verification_score/verification_score.json.sha256
+            out/verification_score/verification_score.md
