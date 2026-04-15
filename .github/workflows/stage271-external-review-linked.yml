@@ -26,10 +26,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install cryptography
 
-      - name: Ensure signing keys exist
-        run: |
-          test -f keys/ed25519_private.pem
-          test -f keys/ed25519_public.pem
 
       - name: Create initial external review record
         run: |
