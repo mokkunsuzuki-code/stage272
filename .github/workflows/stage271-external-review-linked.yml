@@ -1,0 +1,61 @@
+name: stage271-external-review-linked
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  external-review-proof:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependency
+        run: |
+          python -m pip install --upgrade pip
+          pip install cryptography
+
+      - name: Ensure signing keys exist
+        run: |
+          test -f keys/ed25519_private.pem
+          test -f keys/ed25519_public.pem
+
+      - name: Create initial external review record
+        run: |
+          python tools/create_stage271_review_record.py \
+            --reviewer-id self-demo-reviewer \
+            --result comment \
+            --comment "Stage271 bootstrap record linked to Stage270 verification artifact."
+
+      - name: Sign review record
+        run: |
+          latest_review=$(ls review_records/*.json | sort | tail -n 1)
+          python tools/sign_stage271_review.py --review "$latest_review"
+
+      - name: Verify review chain
+        run: |
+          python tools/verify_stage271_review_chain.py
+
+      - name: Build summary
+        run: |
+          python tools/build_stage271_summary.py
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage271-external-review-proof
+          path: |
+            review_records/
+            out/review_chain/
+            docs/stage271_external_review.md

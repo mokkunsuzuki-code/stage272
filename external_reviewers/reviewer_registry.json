@@ -1,0 +1,17 @@
+{
+  "version": "1",
+  "reviewers": [
+    {
+      "id": "self-demo-reviewer",
+      "type": "local_external_placeholder",
+      "display_name": "External Reviewer Placeholder",
+      "contact": "pending"
+    },
+    {
+      "id": "openssf",
+      "type": "organization",
+      "display_name": "OpenSSF",
+      "contact": "https://openssf.org/"
+    }
+  ]
+}

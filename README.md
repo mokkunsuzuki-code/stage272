@@ -1,150 +1,182 @@
-# QSP / Stage270
-## Time-Settled Trust Promotion (Automatic Pending → Accept)
+# QSP / Stage271
+# External Review Linked Proof
 
-Stage270 introduces **automatic time-based trust promotion**.
+Stage271 records external review outcomes as **verifiable evidence** linked to a prior verified target artifact.
 
-This stage upgrades the system from:
+This stage extends Stage270 by adding:
 
-- manual verification
-- static trust evaluation
+- external review record generation
+- cryptographic hash linkage
+- signature over each review record
+- review-chain verification
+- CI artifact generation for public re-checking
 
-to:
-
-- **continuous verification**
-- **time-aware trust evolution**
-
----
-
-## 🎯 What This Stage Does
-
-Stage270 continuously monitors Bitcoin-based timestamp proofs (OpenTimestamps) and:
-
-1. upgrades timestamp proofs
-2. detects Bitcoin confirmations
-3. recalculates trust score
-4. re-evaluates VEP gate
-5. automatically promotes:
-
-
-pending → accept
-
-
-when time settlement is complete.
+The goal is to turn review itself into an auditable object.
 
 ---
 
-## 🔁 Trust Evolution Model
+## Why Stage271 matters
 
+Stage270 proves that the internal verification gate reached an `accept` decision with settled time trust.
 
-Initial:
-pending (time not settled)
+Stage271 adds a new layer:
 
-↓
+- internal proof -> external review proof
 
-Bitcoin confirmations detected
+Instead of only saying:
 
-↓
+- "an external party reviewed this"
 
-Automatic re-evaluation (cron)
+Stage271 makes it possible to verify:
 
-↓
+- which artifact was reviewed
+- which reviewer identity metadata was attached
+- what result/comment was recorded
+- what previous review record it links to
+- whether the review record was tampered with later
 
-accept (fully verified)
+This moves the project from:
 
-
----
-
-## 🧠 Key Concept
-
-### Trust is not static.
-
-In Stage270:
-
-- trust **changes over time**
-- trust becomes **stronger with confirmation depth**
-- trust transitions are **recorded as verifiable events**
+- **internally proven**
+to
+- **externally reviewable and review-record-verifiable**
 
 ---
 
-## ⚙️ System Architecture
+## Core Concept
 
-### VEP Gate
+Each review record contains:
 
-- Immediate Gate:
-  - Integrity (SHA256 / OTS)
-  - Execution (CI / GitHub Actions)
-  - Identity (signatures / multi-signer)
+- reviewer metadata
+- result (`accept` / `pending` / `reject` / `comment`)
+- free-text review comment
+- linked Stage270 verification artifact path
+- SHA256 of that target artifact
+- previous review SHA256
 
-- Settlement Gate:
-  - Time (Bitcoin confirmations)
-
----
-
-### Decision States
-
-| State   | Meaning                         |
-|--------|---------------------------------|
-| reject | unsafe → fail-closed            |
-| pending| valid but not yet confirmed     |
-| accept | fully verified (time-settled)   |
+This creates a tamper-evident review chain.
 
 ---
 
-## 🔄 Automation
+## Repository Structure
 
-Stage270 runs periodically:
+- `schemas/external_review_record.schema.json`  
+  JSON schema for review records
 
+- `external_reviewers/reviewer_registry.json`  
+  Reviewer registry / metadata
 
-schedule:
+- `review_records/*.json`  
+  Individual review records
 
-cron: "*/30 * * * *"
+- `tools/create_stage271_review_record.py`  
+  Creates a review record linked to Stage270 evidence
 
-Every 30 minutes:
+- `tools/sign_stage271_review.py`  
+  Signs a review record with Ed25519
 
-- checks OTS proof
-- extracts confirmations
-- updates trust score
-- re-runs gate
+- `tools/verify_stage271_review_chain.py`  
+  Verifies signatures, hashes, and chain order
 
----
+- `tools/build_stage271_summary.py`  
+  Builds a human-readable summary
 
-## 📢 Accept Notification
+- `docs/stage271_external_review.md`  
+  Explanation and scope
 
-When conditions are met:
-
-- `accept_notification.json` is generated
-- `accept_notification.md` is generated
-- GitHub Actions summary shows ACCEPT
-
-👉 This creates a **verifiable record of trust finalization**
-
----
-
-## 🔐 What This Stage Proves
-
-- Trust can evolve deterministically
-- Time-based verification can be automated
-- Bitcoin confirmations can act as a settlement layer
-- Final trust state is reproducible and externally verifiable
+- `.github/workflows/stage271-external-review-linked.yml`  
+  CI workflow
 
 ---
 
-## 🧭 Summary
+## What This Stage Proves
 
-Stage270:
-→ evaluates trust
+Stage271 proves that review records can be:
 
-Stage270:
-→ **finalizes trust over time**
+- linked to a specific verification artifact
+- hashed deterministically
+- signed
+- chained to prior review records
+- re-verified later by anyone with the public key and repository contents
+
+This does **not** prove that the reviewer is globally authoritative.
+
+It proves that the review record itself is:
+
+- present
+- linked
+- signed
+- chain-consistent
+- tamper-evident
 
 ---
 
-## 🚀 One-line Summary
+## Quick Start
 
-**Trust is no longer decided — it is confirmed over time.**
+### 1. Create a review record
 
----
+```bash
+python tools/create_stage271_review_record.py \
+  --reviewer-id self-demo-reviewer \
+  --result comment \
+  --comment "Bootstrap review linked to Stage270 verification artifact."
+2. Sign it
+latest_review=$(ls review_records/*.json | sort | tail -n 1)
+python tools/sign_stage271_review.py --review "$latest_review"
+3. Verify the review chain
+python tools/verify_stage271_review_chain.py
+4. Build summary
+python tools/build_stage271_summary.py
+Example Review Record
+{
+  "version": "1",
+  "review_id": "example1234abcd",
+  "stage": "stage271",
+  "target_artifact": "out/vep/gate_result.json",
+  "reviewer": {
+    "id": "self-demo-reviewer",
+    "type": "local_external_placeholder",
+    "display_name": "External Reviewer Placeholder",
+    "contact": "pending"
+  },
+  "review_result": "comment",
+  "review_comment": "Bootstrap review linked to Stage270 verification artifact.",
+  "timestamp_utc": "2026-04-15T00:00:00Z",
+  "linked_verification": {
+    "path": "out/vep/gate_result.json",
+    "sha256": "..."
+  },
+  "previous_review_sha256": "GENESIS"
+}
+Strategic Value
 
-## 📄 License
+Stage271 is the bridge between:
 
-MIT License (2025)
+evidence generation
+external evaluation
+standards-adjacent reviewability
+
+This is especially useful before outreach to organizations such as OpenSSF because it shows that the project treats review itself as a verifiable supply-chain-style artifact.
+
+That is the key difference between:
+
+“please trust this review”
+and
+“please verify this review record”
+Limits and Accuracy
+
+This stage does not claim:
+
+formal academic peer review
+standards approval
+universal reviewer trust
+security proof of reviewer honesty
+
+This stage only claims deterministic, signed, chain-verifiable review recording.
+
+License
+
+MIT License
+
+Copyright (c) 2025 Motohiro Suzuki
+

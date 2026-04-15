@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "External Review Record",
+  "type": "object",
+  "required": [
+    "version",
+    "review_id",
+    "stage",
+    "target_artifact",
+    "reviewer",
+    "review_result",
+    "review_comment",
+    "timestamp_utc",
+    "linked_verification",
+    "previous_review_sha256"
+  ],
+  "properties": {
+    "version": { "type": "string" },
+    "review_id": { "type": "string" },
+    "stage": { "type": "string" },
+    "target_artifact": { "type": "string" },
+    "reviewer": {
+      "type": "object",
+      "required": ["id", "type", "display_name"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "display_name": { "type": "string" },
+        "contact": { "type": "string" }
+      }
+    },
+    "review_result": {
+      "type": "string",
+      "enum": ["accept", "pending", "reject", "comment"]
+    },
+    "review_comment": { "type": "string" },
+    "timestamp_utc": { "type": "string" },
+    "linked_verification": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string" }
+      }
+    },
+    "previous_review_sha256": { "type": "string" }
+  }
+}
