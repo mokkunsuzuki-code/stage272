@@ -1,182 +1,529 @@
 # QSP / Stage271
 # External Review Linked Proof
 
-Stage271 records external review outcomes as **verifiable evidence** linked to a prior verified target artifact.
+Stage271 adds a **verifiable external-review layer** on top of Stage270.
 
-This stage extends Stage270 by adding:
+Stage270 proves the internal verification decision.
 
-- external review record generation
-- cryptographic hash linkage
-- signature over each review record
-- review-chain verification
-- CI artifact generation for public re-checking
+Stage271 proves that a review record itself can be:
 
-The goal is to turn review itself into an auditable object.
+- linked to a specific verification artifact
+- signed
+- hash-linked
+- re-verified later
+- checked again in CI
+
+This stage does **not** claim formal academic peer review or standards approval.
+
+It claims that review records can be turned into **tamper-evident, reproducible artifacts**.
 
 ---
 
 ## Why Stage271 matters
 
-Stage270 proves that the internal verification gate reached an `accept` decision with settled time trust.
+Most review processes are trust-based.
 
-Stage271 adds a new layer:
+Someone says:
 
-- internal proof -> external review proof
+- "this was reviewed"
+- "this was accepted"
+- "this was commented on"
 
-Instead of only saying:
+and others must trust that statement.
 
-- "an external party reviewed this"
+Stage271 changes that model.
 
-Stage271 makes it possible to verify:
+Instead of treating review as a trust-only statement, Stage271 records review outcomes as signed and hash-linked artifacts.
 
-- which artifact was reviewed
-- which reviewer identity metadata was attached
-- what result/comment was recorded
-- what previous review record it links to
-- whether the review record was tampered with later
+That means a reviewer statement is no longer just a sentence.
 
-This moves the project from:
-
-- **internally proven**
-to
-- **externally reviewable and review-record-verifiable**
+It becomes something that can be checked later.
 
 ---
 
-## Core Concept
+## Relation to Stage270
 
-Each review record contains:
+Stage270 established the internal gate result by combining:
 
-- reviewer metadata
-- result (`accept` / `pending` / `reject` / `comment`)
-- free-text review comment
-- linked Stage270 verification artifact path
-- SHA256 of that target artifact
-- previous review SHA256
+- integrity
+- execution
+- identity
+- settled time trust
 
-This creates a tamper-evident review chain.
+That stage answers:
+
+- "Was the verification result internally justified?"
+
+Stage271 adds a second layer.
+
+It answers:
+
+- "Was a review record actually created?"
+- "Which artifact was reviewed?"
+- "Was that review record signed?"
+- "Was it linked consistently in the review chain?"
+- "Can it be re-verified later without trusting a verbal claim?"
+
+In short:
+
+- Stage270 = decision proof
+- Stage271 = review proof
 
 ---
 
-## Repository Structure
+## What Stage271 adds
+
+This stage adds:
+
+- external review record schema
+- reviewer registry metadata
+- signed review records
+- SHA256-linked review chain
+- deterministic local verification
+- CI-based re-verification
+- external-review entry documents
+
+---
+
+## Repository structure
+
+### Main documents
+
+- `README.md`  
+  Main overview of Stage271
+
+- `REVIEW_QUICKSTART.md`  
+  Fast external review path
+
+- `REVIEW_PACKET.md`  
+  Submission-oriented explanation
+
+- `REPO_OVERVIEW.md`  
+  Repository map for reviewers
+
+---
+
+### Technical files
 
 - `schemas/external_review_record.schema.json`  
-  JSON schema for review records
+  JSON schema for external review records
 
 - `external_reviewers/reviewer_registry.json`  
   Reviewer registry / metadata
 
 - `review_records/*.json`  
-  Individual review records
+  Review records
+
+- `review_records/*.sig`  
+  Signatures for review records
+
+- `out/review_chain/*.sha256`  
+  SHA256 chain artifacts
+
+- `out/review_chain/review_chain_verification.json`  
+  Chain verification result
+
+- `out/review_chain/latest_review_pointer.json`  
+  Pointer to the current chain head
+
+- `out/review_chain/stage271_summary.md`  
+  Human-readable summary
 
 - `tools/create_stage271_review_record.py`  
-  Creates a review record linked to Stage270 evidence
+  Create review records linked to a verification artifact
 
 - `tools/sign_stage271_review.py`  
-  Signs a review record with Ed25519
+  Sign review records
 
 - `tools/verify_stage271_review_chain.py`  
-  Verifies signatures, hashes, and chain order
+  Verify signatures, hashes, and chain consistency
 
 - `tools/build_stage271_summary.py`  
-  Builds a human-readable summary
-
-- `docs/stage271_external_review.md`  
-  Explanation and scope
+  Build a review summary
 
 - `.github/workflows/stage271-external-review-linked.yml`  
-  CI workflow
+  GitHub Actions workflow for CI re-verification
+
+- `keys/ed25519_public.pem`  
+  Public key used for verification
 
 ---
 
-## What This Stage Proves
+## What this stage proves
 
-Stage271 proves that review records can be:
+Stage271 proves that a review record can be:
 
+- present in the repository
 - linked to a specific verification artifact
-- hashed deterministically
 - signed
-- chained to prior review records
-- re-verified later by anyone with the public key and repository contents
+- associated with a reproducible SHA256 chain
+- re-verified locally
+- re-verified in CI
 
-This does **not** prove that the reviewer is globally authoritative.
+This means the review record becomes **tamper-evident**.
 
-It proves that the review record itself is:
+---
 
-- present
+## What this stage does not prove
+
+Stage271 does **not** prove:
+
+- formal peer review
+- standards endorsement
+- universal reviewer authority
+- reviewer honesty in every possible sense
+- production readiness of the full system
+
+It only proves that the review record itself is:
+
+- explicit
 - linked
 - signed
 - chain-consistent
-- tamper-evident
+- reproducible
 
 ---
 
-## Quick Start
+## Quick verification
 
-### 1. Create a review record
+### Local verification
 
 ```bash
-python tools/create_stage271_review_record.py \
-  --reviewer-id self-demo-reviewer \
-  --result comment \
-  --comment "Bootstrap review linked to Stage270 verification artifact."
-2. Sign it
-latest_review=$(ls review_records/*.json | sort | tail -n 1)
-python tools/sign_stage271_review.py --review "$latest_review"
-3. Verify the review chain
-python tools/verify_stage271_review_chain.py
-4. Build summary
-python tools/build_stage271_summary.py
-Example Review Record
-{
-  "version": "1",
-  "review_id": "example1234abcd",
-  "stage": "stage271",
-  "target_artifact": "out/vep/gate_result.json",
-  "reviewer": {
-    "id": "self-demo-reviewer",
-    "type": "local_external_placeholder",
-    "display_name": "External Reviewer Placeholder",
-    "contact": "pending"
-  },
-  "review_result": "comment",
-  "review_comment": "Bootstrap review linked to Stage270 verification artifact.",
-  "timestamp_utc": "2026-04-15T00:00:00Z",
-  "linked_verification": {
-    "path": "out/vep/gate_result.json",
-    "sha256": "..."
-  },
-  "previous_review_sha256": "GENESIS"
-}
-Strategic Value
+python3 -m pip install cryptography
+python3 tools/verify_stage271_review_chain.py
+python3 tools/build_stage271_summary.py
+Expected result
 
-Stage271 is the bridge between:
+You should see successful verification output for:
 
-evidence generation
-external evaluation
-standards-adjacent reviewability
+review record signature
+review-chain SHA256 linkage
+review-chain summary generation
 
-This is especially useful before outreach to organizations such as OpenSSF because it shows that the project treats review itself as a verifiable supply-chain-style artifact.
+Main output files:
 
-That is the key difference between:
+out/review_chain/review_chain_verification.json
+out/review_chain/latest_review_pointer.json
+out/review_chain/stage271_summary.md
+Core idea
 
-“please trust this review”
-and
-“please verify this review record”
-Limits and Accuracy
+The core idea of Stage271 is simple:
 
-This stage does not claim:
+review should not remain a trust-only statement.
 
-formal academic peer review
-standards approval
-universal reviewer trust
-security proof of reviewer honesty
+It should be:
 
-This stage only claims deterministic, signed, chain-verifiable review recording.
+inspectable
+signed
+linked
+reproducible
+re-verifiable
 
+That is the transition from:
+
+"please trust this review"
+
+to
+
+"please verify this review record"
+Strategic meaning
+
+Stage271 is the bridge from:
+
+internally verified evidence
+
+to
+
+externally reviewable evidence
+
+This is useful for:
+
+external security reviewers
+supply-chain security discussions
+standards-adjacent communication
+OpenSSF-style review conversations
+Current status
+
+At this stage, the repository includes:
+
+signed review record(s)
+public verification key
+hash-linked review artifacts
+successful CI-based re-verification
+reviewer-facing entry-point documents
 License
 
 MIT License
 
 Copyright (c) 2025 Motohiro Suzuki
 
+
+---
+
+# GitHub更新
+
+そのまま実行してください。
+
+```bash
+cd ~/Desktop/test/stage271
+
+cat > README.md << 'EOF'
+# QSP / Stage271
+# External Review Linked Proof
+
+Stage271 adds a **verifiable external-review layer** on top of Stage270.
+
+Stage270 proves the internal verification decision.
+
+Stage271 proves that a review record itself can be:
+
+- linked to a specific verification artifact
+- signed
+- hash-linked
+- re-verified later
+- checked again in CI
+
+This stage does **not** claim formal academic peer review or standards approval.
+
+It claims that review records can be turned into **tamper-evident, reproducible artifacts**.
+
+---
+
+## Why Stage271 matters
+
+Most review processes are trust-based.
+
+Someone says:
+
+- "this was reviewed"
+- "this was accepted"
+- "this was commented on"
+
+and others must trust that statement.
+
+Stage271 changes that model.
+
+Instead of treating review as a trust-only statement, Stage271 records review outcomes as signed and hash-linked artifacts.
+
+That means a reviewer statement is no longer just a sentence.
+
+It becomes something that can be checked later.
+
+---
+
+## Relation to Stage270
+
+Stage270 established the internal gate result by combining:
+
+- integrity
+- execution
+- identity
+- settled time trust
+
+That stage answers:
+
+- "Was the verification result internally justified?"
+
+Stage271 adds a second layer.
+
+It answers:
+
+- "Was a review record actually created?"
+- "Which artifact was reviewed?"
+- "Was that review record signed?"
+- "Was it linked consistently in the review chain?"
+- "Can it be re-verified later without trusting a verbal claim?"
+
+In short:
+
+- Stage270 = decision proof
+- Stage271 = review proof
+
+---
+
+## What Stage271 adds
+
+This stage adds:
+
+- external review record schema
+- reviewer registry metadata
+- signed review records
+- SHA256-linked review chain
+- deterministic local verification
+- CI-based re-verification
+- external-review entry documents
+
+---
+
+## Repository structure
+
+### Main documents
+
+- `README.md`  
+  Main overview of Stage271
+
+- `REVIEW_QUICKSTART.md`  
+  Fast external review path
+
+- `REVIEW_PACKET.md`  
+  Submission-oriented explanation
+
+- `REPO_OVERVIEW.md`  
+  Repository map for reviewers
+
+---
+
+### Technical files
+
+- `schemas/external_review_record.schema.json`  
+  JSON schema for external review records
+
+- `external_reviewers/reviewer_registry.json`  
+  Reviewer registry / metadata
+
+- `review_records/*.json`  
+  Review records
+
+- `review_records/*.sig`  
+  Signatures for review records
+
+- `out/review_chain/*.sha256`  
+  SHA256 chain artifacts
+
+- `out/review_chain/review_chain_verification.json`  
+  Chain verification result
+
+- `out/review_chain/latest_review_pointer.json`  
+  Pointer to the current chain head
+
+- `out/review_chain/stage271_summary.md`  
+  Human-readable summary
+
+- `tools/create_stage271_review_record.py`  
+  Create review records linked to a verification artifact
+
+- `tools/sign_stage271_review.py`  
+  Sign review records
+
+- `tools/verify_stage271_review_chain.py`  
+  Verify signatures, hashes, and chain consistency
+
+- `tools/build_stage271_summary.py`  
+  Build a review summary
+
+- `.github/workflows/stage271-external-review-linked.yml`  
+  GitHub Actions workflow for CI re-verification
+
+- `keys/ed25519_public.pem`  
+  Public key used for verification
+
+---
+
+## What this stage proves
+
+Stage271 proves that a review record can be:
+
+- present in the repository
+- linked to a specific verification artifact
+- signed
+- associated with a reproducible SHA256 chain
+- re-verified locally
+- re-verified in CI
+
+This means the review record becomes **tamper-evident**.
+
+---
+
+## What this stage does not prove
+
+Stage271 does **not** prove:
+
+- formal peer review
+- standards endorsement
+- universal reviewer authority
+- reviewer honesty in every possible sense
+- production readiness of the full system
+
+It only proves that the review record itself is:
+
+- explicit
+- linked
+- signed
+- chain-consistent
+- reproducible
+
+---
+
+## Quick verification
+
+### Local verification
+
+```bash
+python3 -m pip install cryptography
+python3 tools/verify_stage271_review_chain.py
+python3 tools/build_stage271_summary.py
+Expected result
+
+You should see successful verification output for:
+
+review record signature
+review-chain SHA256 linkage
+review-chain summary generation
+
+Main output files:
+
+out/review_chain/review_chain_verification.json
+out/review_chain/latest_review_pointer.json
+out/review_chain/stage271_summary.md
+Core idea
+
+The core idea of Stage271 is simple:
+
+review should not remain a trust-only statement.
+
+It should be:
+
+inspectable
+signed
+linked
+reproducible
+re-verifiable
+
+That is the transition from:
+
+"please trust this review"
+
+to
+
+"please verify this review record"
+Strategic meaning
+
+Stage271 is the bridge from:
+
+internally verified evidence
+
+to
+
+externally reviewable evidence
+
+This is useful for:
+
+external security reviewers
+supply-chain security discussions
+standards-adjacent communication
+OpenSSF-style review conversations
+Current status
+
+At this stage, the repository includes:
+
+signed review record(s)
+public verification key
+hash-linked review artifacts
+successful CI-based re-verification
+reviewer-facing entry-point documents
+License
+
+MIT License
+
+Copyright (c) 2025 Motohiro Suzuki
+EOF
