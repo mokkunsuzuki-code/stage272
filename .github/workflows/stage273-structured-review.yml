@@ -1,4 +1,4 @@
-name: stage272-real-external-review
+name: stage273-structured-review
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  external-review-proof:
+  structured-review-proof:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,12 +26,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install cryptography
 
-      - name: Ensure public key and evidence files exist
+      - name: Ensure structured review files exist
         run: |
           test -f keys/ed25519_public.pem
           ls review_records/*.json
           ls review_records/*.sig
           ls out/review_chain/*.sha256
+          ls artifacts/sbom/*
+          ls artifacts/vuln/*
           ls external_reviews/raw/*
           ls external_reviews/normalized/*
 
@@ -39,17 +41,18 @@ jobs:
         run: |
           python tools/verify_stage271_review_chain.py
 
-      - name: Build Stage272 summary
+      - name: Build Stage273 summary
         run: |
-          python tools/build_stage272_summary.py
+          python tools/build_stage273_summary.py
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: stage272-real-external-review
+          name: stage273-structured-review
           path: |
             review_records/
             external_reviews/
+            artifacts/
             out/review_chain/
-            out/external_review_evidence/
-            docs/stage272_real_external_review.md
+            out/review_context/
+            docs/stage273_structured_review_context.md

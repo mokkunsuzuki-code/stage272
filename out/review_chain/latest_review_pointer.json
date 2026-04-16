@@ -1,4 +1,5 @@
 {
-  "review_record": "review_records/5c1d06768028df16.json",
-  "sha256": "f26a3192eec11b20aac8249710c0dfc6215bddd9826c39672bb0f7764293e7b8"
+  "normalized_record": "external_reviews/normalized/374f994f6faf1050.normalized.json",
+  "review_record": "review_records/374f994f6faf1050.json",
+  "sha256": "443f686005fd034eac95b37dc0873be15d2bdb74380b59df3dc76689fd0018f3"
 }

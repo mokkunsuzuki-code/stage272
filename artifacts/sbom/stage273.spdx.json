@@ -1,0 +1,21 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "stage273-placeholder-sbom",
+  "documentNamespace": "https://example.com/spdx/stage273-placeholder",
+  "creationInfo": {
+    "created": "2026-04-16T00:00:00Z",
+    "creators": ["Tool: placeholder-generator"]
+  },
+  "packages": [
+    {
+      "name": "stage273-placeholder-package",
+      "SPDXID": "SPDXRef-Package-stage273",
+      "versionInfo": "0.0.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION"
+    }
+  ]
+}

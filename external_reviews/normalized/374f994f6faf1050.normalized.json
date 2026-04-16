@@ -1,0 +1,35 @@
+{
+  "linked_verification": {
+    "path": "out/verification_score/verification_score.json",
+    "sha256": "87a9c3ccf1f74abcdc4acfc0f53af04f82f46099c45fef1c3169e674d625f693"
+  },
+  "previous_review_sha256": "f26a3192eec11b20aac8249710c0dfc6215bddd9826c39672bb0f7764293e7b8",
+  "review_comment": "Stage273 structured review record linked to SBOM and vulnerability scan artifacts.",
+  "review_context": {
+    "sbom": {
+      "path": "artifacts/sbom/stage273.spdx.json",
+      "sha256": "750e4e2b864a5b94c043b3ea15fddea5fd01c7037e92cab478adf4bf2fd4dc22"
+    },
+    "vulnerability_scan": {
+      "path": "artifacts/vuln/stage273_vuln_scan.json",
+      "sha256": "15f30324baed14969c607a383696ce46eefcfc1203b0d5e735e3167027e2fa96"
+    }
+  },
+  "review_id": "374f994f6faf1050",
+  "review_origin": "real_external_review_with_structured_context",
+  "review_result": "comment",
+  "review_source": {
+    "path": "external_reviews/raw/review_001_source.txt",
+    "sha256": "9ebb1ea56d64ad59c53408df65d821267b8ade4d3624dfa71d7be5b94bd811ff"
+  },
+  "reviewer": {
+    "contact": "recorded in external review evidence",
+    "display_name": "Real External Reviewer 001",
+    "id": "external-review-001",
+    "type": "real_external_reviewer"
+  },
+  "stage": "stage273",
+  "target_artifact": "out/verification_score/verification_score.json",
+  "timestamp_utc": "2026-04-16T03:37:06Z",
+  "version": "1"
+}
