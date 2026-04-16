@@ -1,0 +1,5 @@
+Source: external review
+Origin: OpenSSF issue / external reviewer / public comment
+Status: captured
+Note:
+Replace this file with the actual external comment or review text once received.
