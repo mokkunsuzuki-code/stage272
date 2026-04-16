@@ -1,0 +1,57 @@
+{
+  "schema": "qsp_session_manifest/v1",
+  "generated_at": "2026-04-06T01:55:55Z",
+  "source": {
+    "type": "qsp_session_result",
+    "path": "out/session/qsp_session_result.json",
+    "sha256": "93b114c236be8619375e19c8a681e4625338da314dc4d5f25341ee15d39c387c"
+  },
+  "session": {
+    "session_id": "qsp-demo-session-0001",
+    "epoch": 1,
+    "handshake_mode": "minimal-qsp-demo"
+  },
+  "binding": {
+    "transcript_hash": "60b4aec57b3cb0290c14035cade1f412fd163a6abcec856d83202fe31a2fe546",
+    "policy": {
+      "policy_id": "stage253-session-policy-v1",
+      "fail_closed": true,
+      "require_transcript_match": true,
+      "require_monotonic_epoch": true,
+      "unexpected_message_action": "reject",
+      "downgrade_action": "reject",
+      "cipher_suite": "QSP-PQC-HKDF-AES256GCM"
+    },
+    "fail_closed_result": {
+      "passed": true,
+      "checks": [
+        {
+          "name": "transcript_hash_bound",
+          "passed": true,
+          "reason": "transcript hash computed and bound into session result"
+        },
+        {
+          "name": "policy_bound",
+          "passed": true,
+          "reason": "selected policy fixed in result"
+        },
+        {
+          "name": "sid_epoch_monotonic",
+          "passed": true,
+          "reason": "sid fixed and epoch monotonic"
+        },
+        {
+          "name": "unexpected_message_rejected",
+          "passed": true,
+          "reason": "policy requires reject on invalid state transition"
+        }
+      ]
+    }
+  },
+  "claims": [
+    "This manifest is derived directly from QSP session execution output.",
+    "Transcript hash, policy, and fail-closed result are fixed in this manifest.",
+    "This manifest is intended to be anchored and independently verified."
+  ],
+  "manifest_sha256": "108d97f172772d280245cd04bddea95bf51f6ada833edde8dc8902562cda13f7"
+}

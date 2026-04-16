@@ -1,0 +1,12 @@
+version: 1
+reviewers:
+- reviewer_id: reviewer_example
+  display_name: Example Reviewer
+  contact: example@example.com
+  key_path: keys/reviewer_example_public.pem
+  key_fingerprint: SHA256:examplefingerprint
+  status: active
+  scope:
+  - release_manifest
+  - approval_policy
+  added_at: '2026-04-02T06:41:38.217464+00:00'

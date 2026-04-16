@@ -1,0 +1,55 @@
+name: stage272-real-external-review
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  external-review-proof:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependency
+        run: |
+          python -m pip install --upgrade pip
+          pip install cryptography
+
+      - name: Ensure public key and evidence files exist
+        run: |
+          test -f keys/ed25519_public.pem
+          ls review_records/*.json
+          ls review_records/*.sig
+          ls out/review_chain/*.sha256
+          ls external_reviews/raw/*
+          ls external_reviews/normalized/*
+
+      - name: Verify review chain
+        run: |
+          python tools/verify_stage271_review_chain.py
+
+      - name: Build Stage272 summary
+        run: |
+          python tools/build_stage272_summary.py
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage272-real-external-review
+          path: |
+            review_records/
+            external_reviews/
+            out/review_chain/
+            out/external_review_evidence/
+            docs/stage272_real_external_review.md

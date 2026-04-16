@@ -1,0 +1,40 @@
+version: 1
+
+claims:
+  - id: CLAIM-001
+    title: Reproducible verification entrypoint exists
+    statement: |
+      The repository provides a single reproducible entrypoint that can build
+      and verify claim evidence deterministically.
+    evidence_paths:
+      - verify_all.sh
+      - README.md
+
+  - id: CLAIM-002
+    title: Security claims are bound to deterministic evidence manifests
+    statement: |
+      Each security claim is converted into a deterministic manifest containing
+      evidence file hashes, and that manifest is committed into a Merkle tree.
+    evidence_paths:
+      - claims/claims.yaml
+      - tools/build_claim_bundle.py
+
+  - id: CLAIM-003
+    title: Independent claim verification is reproducible
+    statement: |
+      A third party can recompute evidence hashes, verify claim manifests, and
+      confirm Merkle inclusion proofs without trusting the original author.
+    evidence_paths:
+      - tools/verify_claims.py
+      - tools/build_claim_bundle.py
+      - verify_all.sh
+
+  - id: CLAIM-POC-001
+    title: Minimal PoC execution works
+    statement: |
+      The minimal executable PoC runs successfully and produces
+      verifiable evidence in a stable output format.
+    evidence_paths:
+      - poc/run_poc.py
+      - poc/verify_poc.sh
+      - out/poc/result.json

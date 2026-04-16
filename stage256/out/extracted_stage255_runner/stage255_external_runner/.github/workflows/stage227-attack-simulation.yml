@@ -1,0 +1,31 @@
+name: Stage227 Attack Simulation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  attack-simulation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run Stage227 attack simulation
+        run: |
+          chmod +x tools/run_stage227.sh
+          chmod +x tools/run_attack_simulation.py
+          ./tools/run_stage227.sh
+
+      - name: Upload attack report
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage227-attack-report
+          path: out/attacks/attack_report.json

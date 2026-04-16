@@ -1,0 +1,32 @@
+{
+  "anchor_type": "external_timestamp_anchor_request",
+  "note": "This request binds the latest transparency checkpoint state to a future externally observable timestamp anchor receipt.",
+  "previous_request_sha256": null,
+  "semantic_binding": {
+    "checkpoint_current_sequence": null,
+    "checkpoint_id": 1,
+    "checkpoint_latest_history_sequence": null
+  },
+  "sequence": 1,
+  "stage": "stage249",
+  "targets": {
+    "checkpoint_current": {
+      "path": "out/transparency/checkpoint.json",
+      "sha256": "5a315e3be3b894fa1a7210f2367281134f744abf24ff0260f40c4970506341bf"
+    },
+    "checkpoint_index": {
+      "path": "out/transparency/checkpoint_index.json",
+      "sha256": "5a315e3be3b894fa1a7210f2367281134f744abf24ff0260f40c4970506341bf"
+    },
+    "checkpoint_latest_history": {
+      "path": "out/transparency/history/checkpoint_0001.json",
+      "sha256": "a1f45b5f259cef6b99b93d72beadefd4e17b09a74ce3236b559c02a45028a29e"
+    },
+    "root_txt": {
+      "path": "out/transparency/root.txt",
+      "sha256": "9056e47e401fe951f0ef82b06c5c98144f212a9d62fe1e8bb509202d1ee64890",
+      "value": "5a315e3be3b894fa1a7210f2367281134f744abf24ff0260f40c4970506341bf"
+    }
+  },
+  "version": 1
+}

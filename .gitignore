@@ -1,3 +1,4 @@
 keys/ed25519_private.pem
+keys/new_private.pem
 __pycache__/
 *.pyc

@@ -1,0 +1,13 @@
+{
+  "review_id": "RVW-001",
+  "reviewer_id": "external_reviewer_alpha",
+  "reviewer_type": "external",
+  "timestamp": "2026-04-01T10:00:00Z",
+  "subject": "QSP reviewer onboarding package",
+  "decision": "accepted_for_review",
+  "summary": "Initial onboarding materials were received and the review scope was understood.",
+  "evidence_refs": [
+    "docs/reviewer_quickstart.md",
+    "docs/reviewer_email_template.md"
+  ]
+}

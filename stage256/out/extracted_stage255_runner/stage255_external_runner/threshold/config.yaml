@@ -1,0 +1,13 @@
+version: 1
+
+threshold_policy:
+  required_signers: 2
+  total_signers: 3
+
+signers:
+  - id: self
+    role: owner
+  - id: reviewer
+    role: third_party
+  - id: researcher
+    role: external_expert

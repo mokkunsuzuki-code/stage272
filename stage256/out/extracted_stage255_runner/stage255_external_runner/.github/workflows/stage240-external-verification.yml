@@ -1,0 +1,70 @@
+name: stage240-external-verification
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+  actions: read
+
+jobs:
+  governed-build:
+    uses: ./.github/workflows/slsa-governed-build.yml
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+
+  external-verification:
+    needs: governed-build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      attestations: read
+
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependency
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Download source bundle
+        uses: actions/download-artifact@v6
+        with:
+          name: stage240-source-bundle
+          path: .
+
+      - name: Download SBOM artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: stage240-source-bundle-sbom
+          path: out/external_verification
+
+      - name: Run external verification gate
+        run: |
+          python3 tools/verify_external_policy.py stage240-source-bundle.tar.gz
+
+      - name: Upload external verification evidence
+        uses: actions/upload-artifact@v6
+        with:
+          name: stage240-external-verification-evidence
+          path: out/external_verification

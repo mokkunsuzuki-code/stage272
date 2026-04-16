@@ -1,0 +1,70 @@
+name: stage247-review-transparency
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  review-transparency:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cryptography pytest pyyaml
+
+      - name: Prepare required keys for legacy tests
+        run: |
+          mkdir -p keys
+
+          if [ ! -f keys/checkpoint_signing_private.pem ]; then
+            openssl genpkey -algorithm Ed25519 -out keys/checkpoint_signing_private.pem
+          fi
+
+          if [ ! -f keys/checkpoint_signing_public.pem ]; then
+            openssl pkey -in keys/checkpoint_signing_private.pem -pubout -out keys/checkpoint_signing_public.pem
+          fi
+
+          if [ ! -f keys/owner_private.pem ]; then
+            openssl genpkey -algorithm Ed25519 -out keys/owner_private.pem
+          fi
+
+          if [ ! -f keys/owner_public.pem ]; then
+            openssl pkey -in keys/owner_private.pem -pubout -out keys/owner_public.pem
+          fi
+
+      - name: Ensure scripts are executable
+        run: |
+          chmod +x tools/build_review_log.py
+          chmod +x tools/verify_review_log.py
+          chmod +x tools/run_stage247_review_transparency.sh
+          chmod +x tools/run_stage230_signed_bundle.sh || true
+
+      - name: Run Stage247 review transparency
+        run: |
+          ./tools/run_stage247_review_transparency.sh
+
+      - name: Run tests
+        run: |
+          pytest -q
+
+      - name: Show generated artifacts
+        run: |
+          echo "=== out/review_log ==="
+          find out/review_log -maxdepth 1 -type f | sort || true
+          echo "=== keys ==="
+          find keys -maxdepth 1 -type f | sort || true

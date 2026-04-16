@@ -1,0 +1,16 @@
+{
+  "records": [
+    {
+      "anchor_sha256": "f95f85d67e059668d567e1ff58fcae560ab1660b4113d3d7bfbc12d08ec94818",
+      "bundle_manifest_sha256": "3c605c2c7e069f87e8402a3c1d8889eefd975a4d6ac8588decaff3848df995b3",
+      "executed_at_utc": "2026-04-06T09:10:11+00:00",
+      "qsp_result_sha256": "8134b870453caecfe60b4ee40031c727d68cc7d8e51a157b55c3a8bd891bf8f2",
+      "receipt_path": "/Users/motohiro/Desktop/test/stage256/out/external_execution_record/receipts/reviewer_local_2026-04-06T09-10-11+00-00.json",
+      "receipt_sha256": "8282a90952aea584ae765611f99c88445dd371329a65b4f9b666997259e103d8",
+      "reviewer_id": "reviewer_local"
+    }
+  ],
+  "stage": "stage256",
+  "type": "external_execution_review_log",
+  "version": 1
+}

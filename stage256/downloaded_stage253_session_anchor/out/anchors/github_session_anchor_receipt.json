@@ -1,0 +1,11 @@
+{
+  "schema": "github_session_anchor_receipt/v1",
+  "repository": "mokkunsuzuki-code/stage253",
+  "workflow": "stage253-session-anchor",
+  "run_id": "24015607813",
+  "run_attempt": "1",
+  "commit_sha": "a1da55e920d2d209fe8552a78254e6abbe01d6be",
+  "run_url": "https://github.com/mokkunsuzuki-code/stage253/actions/runs/24015607813",
+  "manifest_sha256": "108d97f172772d280245cd04bddea95bf51f6ada833edde8dc8902562cda13f7",
+  "artifact_name": "stage253-session-anchor-artifacts"
+}

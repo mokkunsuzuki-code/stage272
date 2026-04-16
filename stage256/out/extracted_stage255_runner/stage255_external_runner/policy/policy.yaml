@@ -1,0 +1,17 @@
+version: 1
+
+artifact:
+  name: stage241-source-bundle.tar.gz
+
+threshold:
+  required: 2
+  total: 2
+
+signers:
+  - id: owner
+    public_key: keys/owner_public.pem
+    signature: signatures/owner.sig
+
+  - id: auditor
+    public_key: keys/auditor_public.pem
+    signature: signatures/auditor.sig

@@ -1,0 +1,6 @@
+#!/Users/motohiro/Desktop/test/stage256/out/extracted_stage255_runner/stage255_external_runner/.venv-stage255-external/bin/python
+import sys
+from pytest import console_main
+if __name__ == '__main__':
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
+    sys.exit(console_main())

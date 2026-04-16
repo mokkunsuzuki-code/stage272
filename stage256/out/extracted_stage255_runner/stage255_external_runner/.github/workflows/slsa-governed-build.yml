@@ -1,0 +1,58 @@
+name: slsa-governed-build
+
+on:
+  workflow_call:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+jobs:
+  build-and-attest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Build source bundle artifact
+        run: |
+          chmod +x tools/build_stage240_artifact.sh
+          ./tools/build_stage240_artifact.sh
+
+      - name: Install Syft
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Generate SPDX SBOM
+        run: |
+          mkdir -p out/external_verification
+          syft "file:stage240-source-bundle.tar.gz" -o spdx-json=out/external_verification/stage240-source-bundle.spdx.json
+          test -f out/external_verification/stage240-source-bundle.spdx.json
+
+      - name: Upload source bundle
+        uses: actions/upload-artifact@v6
+        with:
+          name: stage240-source-bundle
+          path: stage240-source-bundle.tar.gz
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v6
+        with:
+          name: stage240-source-bundle-sbom
+          path: out/external_verification/stage240-source-bundle.spdx.json
+
+      - name: Attest build provenance
+        uses: actions/attest@v4
+        with:
+          subject-path: stage240-source-bundle.tar.gz
+
+      - name: Attest SBOM
+        uses: actions/attest@v4
+        with:
+          subject-path: stage240-source-bundle.tar.gz
+          sbom-path: out/external_verification/stage240-source-bundle.spdx.json

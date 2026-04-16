@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "scenarios": [
+    {
+      "id": "ATTACK-001",
+      "name": "tampered_claim_file",
+      "description": "Modify a copied claim file and verify that integrity check fails.",
+      "type": "tamper",
+      "target": "claims/claims.yaml",
+      "expected_result": "fail"
+    },
+    {
+      "id": "ATTACK-002",
+      "name": "tampered_readme_file",
+      "description": "Modify a copied README and verify that integrity check fails.",
+      "type": "tamper",
+      "target": "README.md",
+      "expected_result": "fail"
+    },
+    {
+      "id": "ATTACK-003",
+      "name": "baseline_clean_verification",
+      "description": "Run verification without tampering and verify that it succeeds.",
+      "type": "baseline",
+      "target": "none",
+      "expected_result": "pass"
+    }
+  ]
+}

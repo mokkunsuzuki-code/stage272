@@ -1,0 +1,19 @@
+{
+  "anchored_at_utc": "2026-04-02T06:43:55+00:00",
+  "checkpoint_id": 1,
+  "checkpoint_sequence": null,
+  "commit_sha": "c93cc011c91844f0d1b7a175fb89359ec8fe561e",
+  "manifest_sha256": "88fa3dc66e56e862a25482b8a284dc30fa257af2e1f8732077db17038958d905",
+  "note": "This receipt records that the release manifest was bound to a public GitHub Actions execution for release-oriented anchoring.",
+  "release_anchor_type": "github_release_anchor_receipt",
+  "release_tag": "stage250-v1",
+  "repository": "mokkunsuzuki-code/stage250",
+  "request_sequence": 1,
+  "request_sha256": "bccb54ec7257b0a72f2b2bf5a0d0b47c14b938930dfb57af392f57419c4aa07e",
+  "run_attempt": "1",
+  "run_id": "23887765377",
+  "run_url": "https://github.com/mokkunsuzuki-code/stage250/actions/runs/23887765377",
+  "stage": "stage250",
+  "version": 1,
+  "workflow": "stage250-release-anchor"
+}

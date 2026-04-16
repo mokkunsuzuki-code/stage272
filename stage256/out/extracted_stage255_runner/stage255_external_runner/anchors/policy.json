@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "name": "stage251-multi-anchor-policy",
+  "threshold": 2,
+  "accepted_anchor_types": [
+    "github_release_anchor",
+    "local_witness",
+    "checkpoint_witness"
+  ]
+}

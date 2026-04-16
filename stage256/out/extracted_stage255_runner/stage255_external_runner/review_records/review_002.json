@@ -1,0 +1,13 @@
+{
+  "review_id": "RVW-002",
+  "reviewer_id": "external_reviewer_beta",
+  "reviewer_type": "external",
+  "timestamp": "2026-04-01T10:30:00Z",
+  "subject": "QSP evidence bundle review",
+  "decision": "needs_followup",
+  "summary": "The evidence bundle is promising, but the review history should itself become auditable.",
+  "evidence_refs": [
+    "evidence_bundle/summary.md",
+    "out/ci/actions_runs.json"
+  ]
+}

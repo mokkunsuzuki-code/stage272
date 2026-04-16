@@ -1,0 +1,21 @@
+version: 1
+
+policy:
+  name: stage243-external-reviewer-onboarding
+  threshold: 2
+  require_external: true
+  min_independence_groups: 2
+  artifact_path: out/stage243/release_manifest.json
+  reviewer_registry_path: metadata/reviewers/reviewer_registry.yaml
+  require_active_external_reviewer: true
+
+signers:
+  - id: developer
+    role: developer
+    independence_group: owner
+    public_key: keys/developer_public.pem
+
+  - id: auditor
+    role: auditor
+    independence_group: owner
+    public_key: keys/auditor_public.pem

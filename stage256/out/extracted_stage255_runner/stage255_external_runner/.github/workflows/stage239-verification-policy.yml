@@ -1,0 +1,85 @@
+name: stage239-verification-policy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+  actions: read
+
+jobs:
+  governed-build:
+    uses: ./.github/workflows/slsa-governed-build.yml
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+
+  verify-policy:
+    needs: governed-build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      attestations: read
+
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ARTIFACT_NAME: stage239-source-bundle.tar.gz
+      SIGNER_WORKFLOW: ${{ github.repository }}/.github/workflows/slsa-governed-build.yml
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Download source bundle
+        uses: actions/download-artifact@v6
+        with:
+          name: stage239-source-bundle
+          path: .
+
+      - name: Download SBOM artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: stage239-source-bundle-sbom
+          path: out/policy
+
+      - name: Prepare output directory
+        run: mkdir -p out/policy
+
+      - name: Verify provenance attestation
+        run: |
+          gh attestation verify "${ARTIFACT_NAME}" \
+            --repo "${{ github.repository }}" \
+            --signer-workflow "${SIGNER_WORKFLOW}" \
+            --format json > out/policy/provenance.verify.json
+
+      - name: Verify SBOM attestation
+        run: |
+          gh attestation verify "${ARTIFACT_NAME}" \
+            --repo "${{ github.repository }}" \
+            --signer-workflow "${SIGNER_WORKFLOW}" \
+            --predicate-type "https://spdx.dev/Document/v2.3" \
+            --format json > out/policy/sbom.verify.json
+
+      - name: Enforce verification policy
+        run: |
+          python3 tools/check_attestation_policy.py \
+            out/policy/provenance.verify.json \
+            out/policy/sbom.verify.json \
+            "${ARTIFACT_NAME}" \
+            "${{ github.repository }}" \
+            "${SIGNER_WORKFLOW}"
+
+      - name: Upload policy evidence
+        uses: actions/upload-artifact@v6
+        with:
+          name: stage239-policy-evidence
+          path: out/policy

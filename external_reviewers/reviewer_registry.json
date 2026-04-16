@@ -11,7 +11,13 @@
       "id": "openssf",
       "type": "organization",
       "display_name": "OpenSSF",
-      "contact": "https://openssf.org/"
+      "contact": "https://github.com/ossf/community/issues"
+    },
+    {
+      "id": "external-review-001",
+      "type": "real_external_reviewer",
+      "display_name": "Real External Reviewer 001",
+      "contact": "recorded in external review evidence"
     }
   ]
 }

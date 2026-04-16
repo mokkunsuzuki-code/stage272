@@ -1,0 +1,61 @@
+name: stage248-checkpoint-chain
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checkpoint-chain:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cryptography pytest pyyaml
+
+      - name: Prepare keys
+        run: |
+          mkdir -p keys
+          if [ ! -f keys/checkpoint_signing_private.pem ]; then
+            openssl genpkey -algorithm Ed25519 -out keys/checkpoint_signing_private.pem
+          fi
+          if [ ! -f keys/checkpoint_signing_public.pem ]; then
+            openssl pkey -in keys/checkpoint_signing_private.pem -pubout -out keys/checkpoint_signing_public.pem
+          fi
+
+      - name: Ensure scripts are executable
+        run: |
+          chmod +x tools/build_review_log.py
+          chmod +x tools/verify_review_log.py
+          chmod +x tools/create_review_checkpoint.py
+          chmod +x tools/verify_checkpoint_chain.py
+          chmod +x tools/run_stage247_review_transparency.sh
+          chmod +x tools/run_stage248_checkpoint_chain.sh
+          chmod +x tools/run_stage230_signed_bundle.sh || true
+
+      - name: Run Stage248 checkpoint chain
+        run: |
+          ./tools/run_stage248_checkpoint_chain.sh
+
+      - name: Run tests
+        run: |
+          pytest -q
+
+      - name: Show history artifacts
+        run: |
+          echo "=== out/review_log_history ==="
+          find out/review_log_history -maxdepth 1 -type f | sort || true

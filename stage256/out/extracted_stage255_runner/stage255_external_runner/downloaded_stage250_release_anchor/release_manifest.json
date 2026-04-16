@@ -1,0 +1,28 @@
+{
+  "note": "This manifest binds Stage249 anchor artifacts into a release-oriented public anchoring unit for Stage250.",
+  "release_anchor_type": "release_manifest",
+  "release_tag": "stage250-v1",
+  "semantic_binding": {
+    "checkpoint_id": 1,
+    "checkpoint_sequence": null,
+    "request_sequence": 1,
+    "request_sha256": "bccb54ec7257b0a72f2b2bf5a0d0b47c14b938930dfb57af392f57419c4aa07e"
+  },
+  "sources": {
+    "anchor_request": {
+      "path": "out/anchors/anchor_request.json",
+      "sha256": "bccb54ec7257b0a72f2b2bf5a0d0b47c14b938930dfb57af392f57419c4aa07e"
+    },
+    "anchor_request_sha256_file": {
+      "path": "out/anchors/anchor_request.sha256",
+      "sha256": "fd42a963e3861cfed0b81024f71fb9ef7771e2b9ae6f152c3b03dcf881fcc1a1",
+      "value": "bccb54ec7257b0a72f2b2bf5a0d0b47c14b938930dfb57af392f57419c4aa07e"
+    },
+    "anchor_summary": {
+      "path": "out/anchors/anchor_summary.json",
+      "sha256": "64c1f9ef3453765f648973349c1b1997b00bea806c880ddfa6b25d2ed9b66b1c"
+    }
+  },
+  "stage": "stage250",
+  "version": 1
+}

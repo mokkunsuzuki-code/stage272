@@ -1,0 +1,26 @@
+# generated artifacts
+out/
+
+# python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# private keys
+keys/*_private.pem
+keys/*.key
+keys/private/
+
+# reviewer private materials
+reviewer_private/
+reviewer_secrets/
+
+# local signatures
+signatures/*.sig.json
+
+# source bundles
+*.tar.gz
+
+# private keys
+keys/*_private.pem
+keys/*.key

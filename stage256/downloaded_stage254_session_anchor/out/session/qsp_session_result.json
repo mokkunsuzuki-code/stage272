@@ -1,0 +1,26 @@
+{
+  "schema": "qsp_session_result/v1",
+  "generated_at": "2026-04-06T02:31:57Z",
+  "source_type": "real_qsp_execution",
+  "source_path": "/home/runner/work/stage254/stage226/out/poc/result.json",
+  "session_id": "qsp-real-session-0001",
+  "epoch": 1,
+  "handshake_mode": "real-qsp-integration",
+  "policy": {},
+  "transcript": [],
+  "transcript_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "fail_closed_result": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "derived_from_real_qsp_output",
+        "passed": true,
+        "reason": "Derived from real QSP execution output for Stage254 normalization"
+      }
+    ]
+  },
+  "notes": [
+    "Stage254 normalizes real QSP execution output into the session anchoring schema.",
+    "This replaces the Stage253 deterministic demo with real integration."
+  ]
+}

@@ -1,0 +1,71 @@
+name: stage242-multi-party
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  threshold-approval-demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cryptography pyyaml pytest
+
+      - name: Generate demo keys
+        run: python tools/generate_stage242_keys.py
+
+      - name: Build manifest
+        run: python tools/build_stage242_manifest.py
+
+      - name: Sign by developer
+        run: |
+          python tools/sign_stage242_artifact.py \
+            --config docs/stage242_policy.yaml \
+            --signer-id developer
+
+      - name: Sign by auditor
+        run: |
+          python tools/sign_stage242_artifact.py \
+            --config docs/stage242_policy.yaml \
+            --signer-id auditor
+
+      - name: Verify should fail without external reviewer
+        run: |
+          set +e
+          python tools/verify_stage242_threshold.py \
+            --config docs/stage242_policy.yaml \
+            --signatures-dir signatures
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
+            echo "verification unexpectedly passed without external reviewer"
+            exit 1
+          fi
+          echo "[OK] failed as expected"
+
+      - name: Add external reviewer signature
+        run: |
+          python tools/sign_stage242_artifact.py \
+            --config docs/stage242_policy.yaml \
+            --signer-id reviewer
+
+      - name: Verify should pass with external reviewer
+        run: |
+          python tools/verify_stage242_threshold.py \
+            --config docs/stage242_policy.yaml \
+            --signatures-dir signatures
+
+      - name: Run tests
+        run: pytest -q

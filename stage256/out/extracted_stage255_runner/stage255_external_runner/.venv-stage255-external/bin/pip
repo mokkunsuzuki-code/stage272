@@ -1,0 +1,8 @@
+#!/Users/motohiro/Desktop/test/stage256/out/extracted_stage255_runner/stage255_external_runner/.venv-stage255-external/bin/python
+# -*- coding: utf-8 -*-
+import re
+import sys
+from pip._internal.cli.main import main
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())

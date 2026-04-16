@@ -1,0 +1,15 @@
+{
+  "payload": {
+    "schema": "qsp_checkpoint_witness/v1",
+    "created_at": "2026-04-06T01:55:55Z",
+    "manifest_path": "out/session/session_manifest.json",
+    "manifest_sha256": "108d97f172772d280245cd04bddea95bf51f6ada833edde8dc8902562cda13f7",
+    "session_id": "qsp-demo-session-0001",
+    "epoch": 1,
+    "transcript_hash": "60b4aec57b3cb0290c14035cade1f412fd163a6abcec856d83202fe31a2fe546",
+    "previous_checkpoint_sha256": null,
+    "witness_type": "checkpoint_witness",
+    "checkpoint_sha256": "7d44f1aac608d71f2edada42b234f41e66a87ed04ed9fb6349a7690c5073d2a6"
+  },
+  "signature_b64": "6qRHa3mU0NNvXPJdbyEVIj6n/EpYBwHzWBOP13YD3W3fdR5hI8cEge28jLSUaidIS3ajwqv7JeKQUam91cz6BQ=="
+}

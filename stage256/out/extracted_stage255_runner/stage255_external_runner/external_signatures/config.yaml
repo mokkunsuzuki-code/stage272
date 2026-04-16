@@ -1,0 +1,14 @@
+version: 1
+
+external_signers:
+  - id: self
+    type: local_key
+    description: Owner local signature
+
+  - id: github_user
+    type: github_identity
+    description: GitHub account signature
+
+  - id: researcher
+    type: external_identity
+    description: External researcher signature

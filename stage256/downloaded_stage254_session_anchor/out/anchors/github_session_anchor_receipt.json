@@ -1,0 +1,10 @@
+{
+  "schema": "github_session_anchor_receipt/v1",
+  "repository": "mokkunsuzuki-code/stage254",
+  "workflow": "stage254-real-qsp-anchor",
+  "run_id": "24016337024",
+  "run_attempt": "1",
+  "commit_sha": "0f05fb514aafbaff133212a760ba714f6aec11e3",
+  "run_url": "https://github.com/mokkunsuzuki-code/stage254/actions/runs/24016337024",
+  "manifest_sha256": "3ea2dcb25061d70072df8ccad6c09d6e9dc530931e66f1d5d94ceae49f157a63"
+}

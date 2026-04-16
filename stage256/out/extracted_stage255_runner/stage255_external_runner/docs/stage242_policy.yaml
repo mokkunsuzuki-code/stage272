@@ -1,0 +1,27 @@
+version: 1
+
+policy:
+  name: stage242-multi-party-approval
+  threshold: 2
+  require_external: true
+  min_independence_groups: 2
+  artifact_path: out/stage242/release_manifest.json
+
+signers:
+  - id: developer
+    role: developer
+    independence_group: owner
+    public_key: keys/developer_public.pem
+    private_key: keys/developer_private.pem
+
+  - id: auditor
+    role: auditor
+    independence_group: owner
+    public_key: keys/auditor_public.pem
+    private_key: keys/auditor_private.pem
+
+  - id: reviewer
+    role: reviewer
+    independence_group: external
+    public_key: keys/reviewer_public.pem
+    private_key: keys/reviewer_private.pem

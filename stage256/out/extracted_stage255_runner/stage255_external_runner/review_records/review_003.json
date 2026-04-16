@@ -1,0 +1,14 @@
+{
+  "review_id": "RVW-003",
+  "reviewer_id": "internal_owner",
+  "reviewer_type": "owner",
+  "timestamp": "2026-04-01T11:00:00Z",
+  "subject": "Review transparency hardening plan",
+  "decision": "implemented",
+  "summary": "A tamper-evident review log with hashing, signature, and verification was added.",
+  "evidence_refs": [
+    "tools/build_review_log.py",
+    "tools/verify_review_log.py",
+    "README.md"
+  ]
+}
